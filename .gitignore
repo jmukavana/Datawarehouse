@@ -26,3 +26,5 @@ tmp*/
 
 # IDE
 .idea/
+.claude
+.tmp_dagster_home_b0_a8lm5
