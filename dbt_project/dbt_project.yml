@@ -1,0 +1,37 @@
+name: bancassurance_dw
+version: "1.0.0"
+profile: bancassurance_dw
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+snapshot-paths: ["snapshots"]
+macro-paths: ["macros"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+
+target-path: target
+clean-targets: [target, dbt_packages]
+
+models:
+  bancassurance_dw:
+    staging:
+      +materialized: view
+      +schema: staging
+    intermediate:
+      +materialized: view
+      +schema: intermediate
+    marts:
+      +materialized: table
+      +schema: marts
+
+seeds:
+  bancassurance_dw:
+    +schema: marts
+
+snapshots:
+  bancassurance_dw:
+    +schema: snapshots
+
+# The warehouse monitors itself: every node result lands in ops.run_log.
+on-run-end:
+  - "{{ log_run_results(results) }}"

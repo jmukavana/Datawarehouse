@@ -1,0 +1,1 @@
+{"transactions":{"columns":{"paybill_ref":{"name":"paybill_ref","data_type":"text","nullable":true}},"write_disposition":"append","name":"transactions","resource":"transactions","x-normalizer":{"seen-data":true}}}

@@ -1,0 +1,37 @@
+version: 2
+
+sources:
+  - name: core_insurance
+    description: Core policy administration system (dlt-loaded raw extracts).
+    schema: raw_core_insurance
+    tables:
+      - name: customers
+        description: Change stream — new customers plus in-place updates (risk re-rating).
+      - name: policies
+        description: Change stream — new policies plus status updates (cancel/lapse).
+      - name: premium_schedules
+        description: One row per installment due on a policy.
+      - name: claims
+        description: Claim status-transition events; arrive up to 14 days late.
+      - name: agents
+      - name: branches
+      - name: products
+
+  - name: mpesa_gateway
+    description: M-Pesa paybill transaction feed (Daraja-style).
+    schema: raw_mpesa_gateway
+    tables:
+      - name: transactions
+        description: >
+          Known quirks handled in staging: naive Africa/Nairobi timestamps
+          mislabelled as UTC, gateway re-pushes duplicates, and a paybill_ref
+          column that appeared mid-history (schema drift).
+
+  - name: bank_payments
+    description: Bank transfer / cheque / cash receipting feed.
+    schema: raw_bank_payments
+    tables:
+      - name: payments
+        description: >
+          Known quirks handled in staging: amounts as strings with thousands
+          separators, value dates in mixed D/M/Y and ISO formats.

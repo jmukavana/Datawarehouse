@@ -1,0 +1,17 @@
+# Two targets, one project: the whole point of the repo.
+#   dev  -> local DuckDB file (default)
+#   prod -> BigQuery (same models, different adapter; configure when migrating)
+bancassurance_dw:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "{{ env_var('DW_DUCKDB_PATH', '../warehouse.duckdb') }}"
+      threads: 4
+    prod:
+      type: bigquery
+      method: oauth
+      project: "{{ env_var('GCP_PROJECT', 'not-configured-yet') }}"
+      dataset: bancassurance_dw
+      location: EU
+      threads: 8

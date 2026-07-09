@@ -1,0 +1,22 @@
+[project]
+name = "bancassurance-dw"
+version = "0.1.0"
+description = "Local-first bancassurance data warehouse: DuckDB + dlt + dbt + Dagster, portable to BigQuery"
+requires-python = ">=3.12"
+dependencies = [
+    "duckdb>=1.1",
+    "dbt-core>=1.9",
+    "dbt-duckdb>=1.9",
+    "dlt[duckdb]>=1.5",
+    "dagster>=1.9",
+    "dagster-dbt>=0.25",
+    "dagster-webserver>=1.9",
+    "faker>=30.0",
+    "pyarrow>=18.0",
+]
+
+[tool.uv]
+package = false
+
+[tool.dagster]
+module_name = "orchestration.definitions"

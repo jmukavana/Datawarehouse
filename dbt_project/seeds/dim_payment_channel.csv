@@ -1,0 +1,5 @@
+payment_channel_key,channel_code,channel_name,is_digital
+1,MPESA,M-Pesa Paybill,true
+2,BANK_TRANSFER,Bank Transfer,true
+3,CHEQUE,Cheque,false
+4,CASH,Cash at Branch,false

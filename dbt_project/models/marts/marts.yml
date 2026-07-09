@@ -1,0 +1,139 @@
+version: 2
+
+models:
+  - name: dim_date
+    columns:
+      - name: date_key
+        data_tests: [unique, not_null]
+
+  - name: dim_customer
+    description: SCD2 — one row per customer version (risk-tier history).
+    columns:
+      - name: customer_key
+        data_tests: [unique, not_null]
+      - name: customer_number
+        data_tests: [not_null]
+      - name: risk_tier
+        data_tests:
+          - accepted_values:
+              values: [LOW, STANDARD, HIGH_RISK]
+
+  - name: dim_agent
+    description: SCD2 — one row per agent version (branch-assignment history).
+    columns:
+      - name: agent_key
+        data_tests: [unique, not_null]
+      - name: agent_code
+        data_tests: [not_null]
+
+  - name: dim_policy
+    columns:
+      - name: policy_key
+        data_tests: [unique, not_null]
+      - name: policy_number
+        data_tests: [unique, not_null]
+      - name: status
+        data_tests:
+          - accepted_values:
+              values: [ACTIVE, CANCELLED, LAPSED]
+
+  - name: dim_product
+    columns:
+      - name: product_key
+        data_tests: [unique, not_null]
+
+  - name: dim_branch
+    columns:
+      - name: branch_key
+        data_tests: [unique, not_null]
+
+  - name: fct_premium_payments
+    description: Grain — one row per premium payment received.
+    data_tests:
+      - dbt_utils.expression_is_true:
+          expression: "amount_paid > 0"
+    columns:
+      - name: payment_key
+        data_tests: [unique, not_null]
+      - name: date_key
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_key
+      - name: customer_key
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customer')
+              field: customer_key
+      - name: policy_key
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_policy')
+              field: policy_key
+      - name: product_key
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_product')
+              field: product_key
+      - name: agent_key
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_agent')
+              field: agent_key
+      - name: branch_key
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_branch')
+              field: branch_key
+      - name: payment_channel_key
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_payment_channel')
+              field: payment_channel_key
+      - name: premium_due_amount
+        data_tests: [not_null]
+      - name: amount_paid
+        data_tests: [not_null]
+
+  - name: fct_claim_events
+    description: Grain — one row per claim status transition.
+    columns:
+      - name: claim_event_key
+        data_tests: [unique, not_null]
+      - name: date_key
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_key
+      - name: customer_key
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customer')
+              field: customer_key
+      - name: policy_key
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_policy')
+              field: policy_key
+      - name: event_status
+        data_tests:
+          - accepted_values:
+              values: [REGISTERED, ASSESSED, APPROVED, REJECTED, PAID, CLOSED]
+
+seeds:
+  - name: dim_payment_channel
+    columns:
+      - name: payment_channel_key
+        data_tests: [unique, not_null]
+      - name: channel_code
+        data_tests: [unique, not_null]

@@ -1,0 +1,28 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+uv.lock
+
+# Data & warehouse files
+data/raw/*
+!data/raw/.gitkeep
+data/generator_state.json
+*.duckdb
+*.duckdb.wal
+
+# dbt
+dbt_project/target/
+dbt_project/dbt_packages/
+dbt_project/logs/
+
+# dlt
+.dlt/secrets.toml
+ingestion/.dlt/secrets.toml
+
+# Dagster
+.dagster_home/
+tmp*/
+
+# IDE
+.idea/

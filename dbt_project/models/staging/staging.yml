@@ -1,0 +1,33 @@
+version: 2
+
+models:
+  - name: stg_core_insurance__customers
+    description: Change stream — multiple rows per customer are expected (updates).
+    columns:
+      - name: customer_number
+        data_tests: [not_null]
+
+  - name: stg_core_insurance__policies
+    columns:
+      - name: policy_number
+        data_tests: [not_null]
+
+  - name: stg_core_insurance__premium_schedules
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [policy_number, installment_no]
+
+  - name: stg_mpesa_gateway__payments
+    columns:
+      - name: policy_number
+        data_tests: [not_null]
+      - name: amount
+        data_tests: [not_null]
+
+  - name: stg_bank_payments__payments
+    columns:
+      - name: payment_date
+        description: Must parse from both ISO and D/M/Y source formats.
+        data_tests: [not_null]
+      - name: amount
+        data_tests: [not_null]
